@@ -5,6 +5,7 @@
  */
 
 
+
 /**
  * Prepares variables for view templates.
  *
@@ -19,5 +20,27 @@
  *       visually distinct.
  */
 function template_preprocess_views_blogspot_archive_view_archive(&$variables) {
-  $variables['views_blogspot_archive'] = 'some data here.';
+  //dsm($variables);
+  $items = array();
+  $items[] = 'data here';
+  $items[] = array(
+    '#markup' => 'Parent item',
+    'children' => array(
+      'Simple string child',
+      array(
+        '#markup' => 'Second child item with custom attributes',
+        '#wrapper_attributes' => array(
+          'class' => array('custom-child-item-class'),
+        ),
+      ),
+    ),
+  );
+
+  $variables['views_blogspot_archive'] = [
+    '#theme' => 'item_list',
+    '#items' => $items,
+    '#list_type' => 'ul',
+    '#context' => 'list_style',
+    '#title' => 'main-title',
+  ];
 }
