@@ -53,11 +53,54 @@ class ViewsBlogspotArchive extends StylePluginBase {
   protected function defineOptions() {
     $options = parent::defineOptions();
     // Define options.
+    $options['vba_field_name'] = array('default' => '');
+    $options['vba_view_name'] = array('default' => FALSE);
+    $options['vba_view_display_id'] = array('default' => FALSE);
+
     return $options;
   }
 
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     // Options form here.
     parent::buildOptionsForm($form, $form_state);
+    $form['sna_blocks_wrapper'] = array(
+      '#markup' => '<b>Note:</b> Archive blocks required two settings. 1. Date field based on which archive will be created and 2. A view page to display output when user click links in archive block. Archive block settings for each block need to be unique so override the settings.',
+    );
+
+    $form['vba_field_name'] = array(
+      '#type' => 'textfield',
+      '#title' => $this->t('Date Field Name'),
+      '#default_value' => 'node_created',
+      '#size' => 60,
+      '#maxlength' => 128,
+      '#required' => TRUE,
+      '#description' => $this->t('Provide date type field machine name. Archive will be created based on this field.'),
+    );
+
+    $views_data = array();
+    $views = \Drupal::entityManager()->getStorage('view')->loadMultiple();
+    /* @var \Drupal\views\Entity\View[] $views */
+    foreach ($views as $view) {
+      //dsm(get_object_vars($view));
+      //dsm(get_class_methods($view));
+
+      $displays = $view->get('display');
+      foreach (array_keys($displays) as $display_id) {
+        //dsm($display_id);
+        $display =& $view->getDisplay($display_id);
+        if ($display['display_options']['path']) {
+          $views_data[$view->get('label') . '::' . $display_id] = [$display['display_options']['path']];
+        }
+      }
+    }
+    $form['vba_view_name'] = array(
+      '#type' => 'select',
+      '#title' => $this->t('Page'),
+      '#options' => $views_data,
+      '#default_value' => '',
+      '#required' => TRUE,
+      '#empty_option' => '- None -',
+      '#description' => $this->t('Machine name of the view whose page is used to display archive result.'),
+    );
   }
 }
