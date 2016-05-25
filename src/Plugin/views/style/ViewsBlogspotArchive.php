@@ -64,13 +64,13 @@ class ViewsBlogspotArchive extends StylePluginBase {
     // Options form here.
     parent::buildOptionsForm($form, $form_state);
     $form['sna_blocks_wrapper'] = array(
-      '#markup' => '<b>Note:</b> Archive blocks required two settings. 1. Date field based on which archive will be created and 2. A view page to display output when user click links in archive block. Archive block settings for each block need to be unique so override the settings.',
+      '#markup' => '<b>Note:</b> Archive blocks required two settings. 1. Date field, based on which archive will be created and 2. A view page to display output when user click links in archive block. Archive block settings for each block need to be unique so override the settings.',
     );
 
     $form['vba_field_name'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Date Field Name'),
-      '#default_value' => 'node_created',
+      '#default_value' => $this->options['vba_field_name'],
       '#size' => 60,
       '#maxlength' => 128,
       '#required' => TRUE,
@@ -89,7 +89,8 @@ class ViewsBlogspotArchive extends StylePluginBase {
         //dsm($display_id);
         $display =& $view->getDisplay($display_id);
         if ($display['display_options']['path']) {
-          $views_data[$view->get('label') . '::' . $display_id] = [$display['display_options']['path']];
+          $data = 'view.' . $view->get('id') . '.' . $display_id;
+          $views_data[$data] = $data;
         }
       }
     }
@@ -97,7 +98,7 @@ class ViewsBlogspotArchive extends StylePluginBase {
       '#type' => 'select',
       '#title' => $this->t('Page'),
       '#options' => $views_data,
-      '#default_value' => '',
+      '#default_value' => $this->options['vba_view_name'],
       '#required' => TRUE,
       '#empty_option' => '- None -',
       '#description' => $this->t('Machine name of the view whose page is used to display archive result.'),
