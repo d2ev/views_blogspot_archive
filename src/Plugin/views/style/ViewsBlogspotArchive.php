@@ -70,7 +70,7 @@ class ViewsBlogspotArchive extends StylePluginBase {
     $form['vba_field_name'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Date Field Name'),
-      '#default_value' => $this->options['vba_field_name'],
+      '#default_value' => $this->options['vba_field_name'] ? $this->options['vba_field_name'] : 'created',
       '#size' => 60,
       '#maxlength' => 128,
       '#required' => TRUE,
@@ -81,12 +81,8 @@ class ViewsBlogspotArchive extends StylePluginBase {
     $views = \Drupal::entityManager()->getStorage('view')->loadMultiple();
     /* @var \Drupal\views\Entity\View[] $views */
     foreach ($views as $view) {
-      //dsm(get_object_vars($view));
-      //dsm(get_class_methods($view));
-
       $displays = $view->get('display');
       foreach (array_keys($displays) as $display_id) {
-        //dsm($display_id);
         $display =& $view->getDisplay($display_id);
         if ($display['display_options']['path']) {
           $data = 'view.' . $view->get('id') . '.' . $display_id;
@@ -98,7 +94,7 @@ class ViewsBlogspotArchive extends StylePluginBase {
       '#type' => 'select',
       '#title' => $this->t('Page'),
       '#options' => $views_data,
-      '#default_value' => $this->options['vba_view_name'],
+      '#default_value' => $this->options['vba_view_name'] ? $this->options['vba_view_name'] : NULL,
       '#required' => TRUE,
       '#empty_option' => '- None -',
       '#description' => $this->t('Machine name of the view whose page is used to display archive result.'),

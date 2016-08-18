@@ -78,7 +78,9 @@ function template_preprocess_views_blogspot_archive_view_archive(&$variables) {
     $context_route = \Drupal::request()->attributes->get('_route');
     if ($context_route == $result_page_route) {
       $year_to_expand = $arg->get('year');
-      $month_to_expand = date('F', mktime(0, 0, 0, $arg->get('month'), 10));
+      if ($arg->get('month')) {
+        $month_to_expand = date('F', mktime(0, 0, 0, $arg->get('month'), 10));
+      }
     }
   }
 
@@ -88,6 +90,9 @@ function template_preprocess_views_blogspot_archive_view_archive(&$variables) {
     '#list_type' => 'ul',
     '#context' => 'list_style',
     '#title' => 'main-title',
+    '#cache' => [
+      'contexts' => ['url.query_args:year', 'url.query_args:month', 'url.path']
+    ]
   ];
 }
 
@@ -163,9 +168,8 @@ function views_blogspot_html($results, $year_to_expand, $month_to_expand, $resul
             $count = 1;
             // Loop through active month's node.
             foreach ($entities as $id => $entity) {
-
               // $archive_items number of nodes display in expanded archive.
-              $link_obj = Link::fromTextAndUrl(t($entity->label()), Url::fromUri('internal:' . $entity->toUrl()));
+              $link_obj = Link::fromTextAndUrl(t($entity->label()), $entity->toUrl());
               $link_element = $link_obj->toRenderable();
               $child_entities[] = render($link_element);
               $count = $count != 0 ? $count + 1 : 0;
@@ -175,7 +179,7 @@ function views_blogspot_html($results, $year_to_expand, $month_to_expand, $resul
           $link_obj = Link::fromTextAndUrl(t($month_parts[0]), Url::fromRoute($result_page_route, array(), array('query' => array('year' => $year_parts[0], 'month' => date('m', strtotime($month_parts[0] . '-' . $year_parts[0]))))));
           $link_element = $link_obj->toRenderable();
           $child_months[] = array(
-            '#markup' => render($link_element) . '&nbsp;<span>' . $month_parts[1] . '</span>',
+            '#markup' => render($link_element) . '<span>' . $month_parts[1] . '</span>',
             'children' => $child_entities,
           );
         }
@@ -184,7 +188,7 @@ function views_blogspot_html($results, $year_to_expand, $month_to_expand, $resul
       $link_obj = Link::fromTextAndUrl(t($year_parts[0]), Url::fromRoute($result_page_route, array(), array('query' => array('year' => $year_parts[0]))));
       $link_element = $link_obj->toRenderable();
       $items[] = array(
-        '#markup' => render($link_element) . '&nbsp;<span>' . $year_parts[1] . '</span>',
+        '#markup' => render($link_element) . '<span>' . $year_parts[1] . '</span>',
         'children' => $child_months,
       );
     }
