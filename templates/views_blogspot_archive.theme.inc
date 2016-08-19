@@ -44,7 +44,7 @@ function template_preprocess_views_blogspot_archive_view_archive(&$variables) {
     }
   }
   // Now add count to year and months.
-  $data = views_blogspot_add_count($data);
+  $data = views_blogspot_archive_add_count($data);
 
   // $view_parts[0] view name, $view_parts[1] display id and $view_parts[2] path.
   $result_page_route = $style['vba_view_name'];
@@ -86,7 +86,7 @@ function template_preprocess_views_blogspot_archive_view_archive(&$variables) {
 
   $variables['views_blogspot_archive'] = [
     '#theme' => 'item_list',
-    '#items' => views_blogspot_html($data, $year_to_expand, $month_to_expand, $result_page_route),
+    '#items' => views_blogspot_archive_html($data, $year_to_expand, $month_to_expand, $result_page_route),
     '#list_type' => 'ul',
     '#context' => 'list_style',
     '#title' => 'main-title',
@@ -105,7 +105,7 @@ function template_preprocess_views_blogspot_archive_view_archive(&$variables) {
  * @return array
  *   An results array.
  */
-function views_blogspot_add_count($results) {
+function views_blogspot_archive_add_count($results) {
   if (!empty($results)) {
     foreach ($results as $year => $month) {
       $year_count = 0;
@@ -141,7 +141,7 @@ function views_blogspot_add_count($results) {
  * @return string
  *   An HTML string.
  */
-function views_blogspot_html($results, $year_to_expand, $month_to_expand, $result_page_route) {
+function views_blogspot_archive_html($results, $year_to_expand, $month_to_expand, $result_page_route) {
   $items = array();
 
   if (!empty($results)) {
@@ -167,7 +167,7 @@ function views_blogspot_html($results, $year_to_expand, $month_to_expand, $resul
           if ($active_month) {
             $count = 1;
             // Loop through active month's node.
-            foreach ($entities as $id => $entity) {
+            foreach ($entities as $entity) {
               // $archive_items number of nodes display in expanded archive.
               $link_obj = Link::fromTextAndUrl(t($entity->label()), $entity->toUrl());
               $link_element = $link_obj->toRenderable();
