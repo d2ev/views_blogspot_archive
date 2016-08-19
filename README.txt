@@ -7,7 +7,8 @@ core bartik theme.
 
 -- INSTALLATION --
 
-  Install module like normal
+  Install module like normal.
 
 -- CONFIGURATION --
-  Follow example view attached for setting references.
+  Follow example view attached for setting references(Block display for archive
+  and Page display for views archive result).
