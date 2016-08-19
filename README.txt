@@ -1,4 +1,4 @@
-This module provide blogger(blogspot) like archive style option for Views.
+This module provides a blogger(blogspot) like archive style option for Views.
 
 You can set the field based on which archive need to be created in views style settings.
 
