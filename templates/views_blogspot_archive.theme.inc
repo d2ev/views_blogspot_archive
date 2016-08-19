@@ -194,7 +194,7 @@ function views_blogspot_html($results, $year_to_expand, $month_to_expand, $resul
     }
   }
   else {
-    $items[] = t('No posts available');
+    $items[] = t('No posts available.');
   }
   return $items;
 }
