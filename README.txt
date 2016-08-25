@@ -10,5 +10,5 @@ core bartik theme.
   Install module like normal.
 
 -- CONFIGURATION --
-  Follow the example view attached for setting references(Block display for archive
+  Follow the example view attached for settings references(Block display for archive
   and Page display for views archive result).
